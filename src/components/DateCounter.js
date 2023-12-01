@@ -2,10 +2,25 @@ import { useReducer, useState } from "react";
 
 function reducer(state, action) {
   console.log(state, action);
+  // if (action.type === "inc") return state + action.playload;
+  // if (action.type === "dev") return state - action.playload;
+  // if (action.type === "setCount") return action.playload;
+
+  switch(action.type) {
+    case 'dec':
+      return {...state, count: state.count +1};
+    case 'inc':
+      return {...state, count: state.count -1};
+    case 'setCount':
+      return {...state, count: action.playload};
+    case 'reset':
+      return {count: 0, step: 1};
+    default:
+      throw new Error('Weird Action');
+  }
 }
 
 function DateCounter() {
-  // const [count, setCount] = useState(0);
   const [count, dispatch] = useReducer(reducer, 0);
   const [step, setStep] = useState(1);
 
@@ -14,17 +29,16 @@ function DateCounter() {
   date.setDate(date.getDate() + count);
 
   const dec = function () {
-    // setCount((count) => count - 1);
-    // setCount((count) => count - step);
+    dispatch({ type: "dec", playload: -1 });
   };
 
   const inc = function () {
-    // setCount((count) => count + 1);
-    // setCount((count) => count + step);
+    dispatch({ type: "inc", playload: 1 });
+
   };
 
   const defineCount = function (e) {
-    // setCount(Number(e.target.value));
+    dispatch({ type: "setCount", playload: Number(e.target.value) });
   };
 
   const defineStep = function (e) {
@@ -32,8 +46,8 @@ function DateCounter() {
   };
 
   const reset = function () {
-    // setCount(0);
-    setStep(1);
+    dispatch({type: 'reset'})
+
   };
 
   return (
